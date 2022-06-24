@@ -12,3 +12,7 @@
 
 
 .DS_Store
+
+/assets/locales
+
+.credentials/

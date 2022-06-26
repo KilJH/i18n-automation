@@ -38,6 +38,9 @@ async function fetchTranslationsFromSheetToJson(doc) {
 
   rows.forEach((row) => {
     const key = row[columnKeyToHeader.key];
+    const keyDepth = key.split(".");
+    const depth = keyDepth.length;
+
     lngs.forEach((lng) => {
       const translation = row[columnKeyToHeader[lng]];
       // NOT_AVAILABLE_CELL("_N/A") means no related language
@@ -49,7 +52,22 @@ async function fetchTranslationsFromSheetToJson(doc) {
         lngsMap[lng] = {};
       }
 
-      lngsMap[lng][key] = translation || ""; // prevent to remove undefined value like ({"key": undefined})
+      let translateWithDepth = lngsMap[lng];
+      // depth 처리
+      for (let i = 0; i < depth; i += 1) {
+        if (!translateWithDepth[keyDepth[i]]) {
+          translateWithDepth[keyDepth[i]] = {};
+        }
+
+        if (i === depth - 1) {
+          translateWithDepth[keyDepth[i]] = translation || "";
+          return;
+        }
+
+        translateWithDepth = translateWithDepth[keyDepth[i]];
+      }
+
+      // lngsMap[lng][key] = translation || ""; // prevent to remove undefined value like ({"key": undefined})
     });
   });
 

@@ -6,8 +6,15 @@
     "mkdirp": "^1.0.4"
   },
   "devDependencies": {
+    "@types/i18next": "^13.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.30.0",
+    "@typescript-eslint/parser": "^5.30.0",
+    "eslint": "^8.18.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.1.0",
     "google-spreadsheet": "^3.3.0",
-    "i18next-scanner": "^3.3.0"
+    "i18next-scanner": "^3.3.0",
+    "prettier": "^2.7.1"
   },
   "scripts": {
     "scan:i18n": "i18next-scanner --config i18next-scanner.config.js",

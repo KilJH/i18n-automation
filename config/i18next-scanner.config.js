@@ -1,6 +1,6 @@
 const path = require("path");
 
-const COMMON_EXTENSIONS = "/**/*.{js,jsx,ts,tsx,vue,html}";
+const COMMON_EXTENSIONS = "/**/*.{js,jsx,ts,tsx,html}";
 
 module.exports = {
   input: [
@@ -13,7 +13,7 @@ module.exports = {
     lngs: ["ko-KR", "en-US", "ja-JP"],
     func: {
       list: ["i18next.t", "i18n.t", "$i18n.t"],
-      extensions: [".js", ".jsx", ".ts", ".tsx", ".vue", ".html"],
+      extensions: [".js", ".jsx", ".ts", ".tsx", ".html"],
     },
     resource: {
       loadPath: path.join(__dirname, "../assets/locales/{{lng}}/{{ns}}.json"),
@@ -30,7 +30,7 @@ module.exports = {
 
       return "";
     },
-    keySeparator: false,
+    keySeparator: ".",
     nsSeparator: false,
     prefix: "%{",
     suffix: "}",

@@ -33,17 +33,17 @@ async function updateTranslationsFromKeyMapToSheet(doc, keyMap) {
   const rows = await sheet.getRows();
 
   // find exsit keys
-  const exsitKeys = {};
+  const existKeys = {};
   const addedRows = [];
   rows.forEach((row) => {
     const key = row[columnKeyToHeader.key];
     if (keyMap[key]) {
-      exsitKeys[key] = true;
+      existKeys[key] = true;
     }
   });
 
   for (const [key, translations] of Object.entries(keyMap)) {
-    if (!exsitKeys[key]) {
+    if (!existKeys[key]) {
       const row = {
         [columnKeyToHeader.key]: key,
         ...Object.keys(translations).reduce((result, lng) => {
@@ -77,23 +77,33 @@ function toJson(keyMap) {
 }
 
 function gatherKeyMap(keyMap, lng, json) {
+  const updateSheetWithDeepkey = (key, value) => {
+    if (typeof value === "object") {
+      const keys = Object.keys(value); // object sub keys
+      keys.forEach((subKey) =>
+        updateSheetWithDeepkey(key + "." + subKey, value[subKey])
+      );
+    } else {
+      // 기존 언어별 컬럼 매핑
+      if (!keyMap[key]) {
+        keyMap[key] = {};
+      }
+
+      const keyMapWithLng = keyMap[key];
+      if (!keyMapWithLng[key]) {
+        keyMapWithLng[key] = lngs.reduce((initObj, lng) => {
+          initObj[lng] = NOT_AVAILABLE_CELL;
+
+          return initObj;
+        }, {});
+      }
+
+      keyMapWithLng[key][lng] = value;
+    }
+  };
+
   for (const [keyWithPostfix, translated] of Object.entries(json)) {
-    const key = getPureKey(keyWithPostfix);
-
-    if (!keyMap[key]) {
-      keyMap[key] = {};
-    }
-
-    const keyMapWithLng = keyMap[key];
-    if (!keyMapWithLng[keyWithPostfix]) {
-      keyMapWithLng[keyWithPostfix] = lngs.reduce((initObj, lng) => {
-        initObj[lng] = NOT_AVAILABLE_CELL;
-
-        return initObj;
-      }, {});
-    }
-
-    keyMapWithLng[keyWithPostfix][lng] = translated;
+    updateSheetWithDeepkey(keyWithPostfix, translated);
   }
 }
 

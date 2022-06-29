@@ -3,9 +3,8 @@ import i18next from "i18next";
 import ko_KR from "../assets/locales/ko-KR/translation.json";
 import en_US from "../assets/locales/en-US/translation.json";
 import ja_JP from "../assets/locales/ja-JP/translation.json";
-import zh_CN from "../assets/locales/zh-CN/translation.json";
 
-const lngs = ["ko-KR", "en-US", "ja-JP", "zh-CN"];
+const lngs = ["ko-KR", "en-US", "ja-JP"];
 /**
  * Must add new language here
  * @param lng {Language} language

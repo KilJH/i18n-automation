@@ -3,10 +3,14 @@
   "packageManager": "yarn@3.2.1",
   "dependencies": {
     "i18next": "^21.8.10",
-    "mkdirp": "^1.0.4"
+    "mkdirp": "^1.0.4",
+    "ts-node": "^10.8.1"
   },
   "devDependencies": {
+    "@types/google-spreadsheet": "^3.2.3",
     "@types/i18next": "^13.0.0",
+    "@types/mkdirp": "^1.0.2",
+    "@types/node": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.30.0",
     "@typescript-eslint/parser": "^5.30.0",
     "eslint": "^8.18.0",
@@ -14,12 +18,14 @@
     "eslint-plugin-prettier": "^4.1.0",
     "google-spreadsheet": "^3.3.0",
     "i18next-scanner": "^3.3.0",
-    "prettier": "^2.7.1"
+    "prettier": "^2.7.1",
+    "typescript": "^4.7.4"
   },
   "scripts": {
-    "scan:i18n": "i18next-scanner --config i18next-scanner.config.js",
-    "upload:i18n": "npm run scan:i18n && node translate/upload.js",
-    "download:i18n": "node translate/download.js",
-    "serve": "npm run download:i18n && vue-cli-service serve"
+    "scan:i18n": "i18next-scanner --config config/i18next-scanner.config.js",
+    "upload:i18n": "npm run scan:i18n && ts-node translate/upload.ts",
+    "download:i18n": "ts-node translate/download.ts",
+    "serve": "npm run download:i18n && vue-cli-service serve",
+    "test": "ts-node translate/test.ts"
   }
 }

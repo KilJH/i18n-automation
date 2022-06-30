@@ -14,11 +14,15 @@ import {
 } from './index';
 
 type LanguageMap = {
-  [key: string]: string;
+  [lng: string]: string;
+};
+
+type KeyMapWithLng = {
+  [key: string]: LanguageMap;
 };
 
 type KeyMap = {
-  [lng: string]: LanguageMap;
+  [key: string]: KeyMapWithLng;
 };
 
 type Row = {
@@ -47,7 +51,7 @@ async function addNewSheet(
 
 async function updateTranslationsFromKeyMapToSheet(
   doc: GoogleSpreadsheet,
-  keyMap: KeyMap,
+  keyMap: KeyMapWithLng,
 ) {
   const title = 'Translate Sheet'; // Sheet Name
   let sheet = doc.sheetsById[sheetId];
@@ -74,7 +78,6 @@ async function updateTranslationsFromKeyMapToSheet(
         ...Object.keys(translations).reduce((result: LanguageMap, lng) => {
           const header: string = columnKeyToHeader[lng];
           result[header] = translations[lng];
-
           return result;
         }, {}),
       };
@@ -88,12 +91,12 @@ async function updateTranslationsFromKeyMapToSheet(
 }
 
 function toJson(keyMap: KeyMap) {
-  const json: KeyMap = {};
+  const json: KeyMapWithLng = {};
 
   Object.entries(keyMap).forEach(([__, keysByPlural]) => {
     for (const [keyWithPostfix, translations] of Object.entries(keysByPlural)) {
       json[keyWithPostfix] = {
-        ...(translations as any),
+        ...translations,
       };
     }
   });
@@ -101,7 +104,7 @@ function toJson(keyMap: KeyMap) {
   return json;
 }
 
-function gatherKeyMap(keyMap: KeyMap, lng: string, json: JSON) {
+function gatherKeyMap(keyMap: KeyMap, lng: string, json: OriginMap) {
   const updateSheetWithDeepkey = (key: string, value: string | OriginMap) => {
     if (typeof value === 'object') {
       const keys = Object.keys(value); // object sub keys
@@ -123,15 +126,14 @@ function gatherKeyMap(keyMap: KeyMap, lng: string, json: JSON) {
             return initObj;
           },
           {},
-        ) as any;
+        );
       }
 
-      (keyMapWithLng[key] as any)[lng] = value;
+      keyMapWithLng[key][lng] = value;
     }
   };
 
   for (const [keyWithPostfix, translated] of Object.entries(json)) {
-    console.log(keyWithPostfix, translated);
     updateSheetWithDeepkey(keyWithPostfix, translated);
   }
 }

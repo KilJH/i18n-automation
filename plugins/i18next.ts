@@ -1,28 +1,28 @@
 // place in plugins/i18next.js
-import i18next from "i18next";
-import ko_KR from "../assets/locales/ko-KR/translation.json";
-import en_US from "../assets/locales/en-US/translation.json";
-import ja_JP from "../assets/locales/ja-JP/translation.json";
+import i18next from 'i18next';
+import ko_KR from '../assets/locales/ko-KR/translation.json';
+import en_US from '../assets/locales/en-US/translation.json';
+import ja_JP from '../assets/locales/ja-JP/translation.json';
 
-const lngs = ["ko-KR", "en-US", "ja-JP"];
+const lngs = ['ko-KR', 'en-US', 'ja-JP'];
 /**
  * Must add new language here
  * @param lng {Language} language
  * @returns {Object} json resource
  */
-function loadResource(lng) {
+function loadResource(lng: string): object {
   let module;
 
   switch (lng) {
-    case "ko-KR": {
+    case 'ko-KR': {
       module = ko_KR;
       break;
     }
-    case "en-US": {
+    case 'en-US': {
       module = en_US;
       break;
     }
-    case "ja-JP": {
+    case 'ja-JP': {
       module = ja_JP;
       break;
     }
@@ -33,10 +33,10 @@ function loadResource(lng) {
   return module;
 }
 
-function getResources(lngs) {
+function getResources(lngs: string[]) {
   const resources = {};
 
-  lngs.forEach((lng) => {
+  lngs.forEach(lng => {
     resources[lng] = {
       translation: loadResource(lng),
     };
@@ -45,7 +45,7 @@ function getResources(lngs) {
   return resources;
 }
 
-export function initializeI18next(lng = "ko-KR") {
+export function initializeI18next(lng = 'ko-KR') {
   i18next.init({
     lng,
     fallbackLng: false,
@@ -53,13 +53,13 @@ export function initializeI18next(lng = "ko-KR") {
     keySeparator: false,
     nsSeparator: false,
     interpolation: {
-      prefix: "%{",
-      suffix: "}",
+      prefix: '%{',
+      suffix: '}',
     },
     parseMissingKeyHandler(key) {
       /* eslint-disable-next-line no-console */
-      console.warn("parseMissingKeyHandler", `'key': '${key}'`);
-      const keySeparator = "~~";
+      console.warn('parseMissingKeyHandler', `'key': '${key}'`);
+      const keySeparator = '~~';
       const value = key.includes(keySeparator)
         ? key.split(keySeparator)[1]
         : key;
